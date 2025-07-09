@@ -1,0 +1,17 @@
+python3 -m http.server 8080
+
+kubectl delete pod secure-nginx
+kubectl apply -f secure-nginx.yaml
+kubectl get pods
+kubectl describe pod secure-nginx
+kubectl logs secure-nginx -c decrypt-init
+
+sudo ctr -n k8s.io images list | grep nginx
+sudo ctr -n k8s.io images list | grep import
+sudo ctr -n k8s.io images remove localhost/nginx-decrypted:latest
+
+
+
+
+
+

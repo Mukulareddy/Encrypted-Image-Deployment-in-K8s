@@ -1,0 +1,21 @@
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV CONTAINERD_VER=1.7.14
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    curl tar bash ca-certificates openssl && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install containerd (for ARM64) and extract only ctr
+RUN curl -L https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VER}/containerd-${CONTAINERD_VER}-linux-arm64.tar.gz \
+    -o /tmp/containerd.tar.gz && \
+    mkdir -p /tmp/containerd && \
+    tar -xzf /tmp/containerd.tar.gz -C /tmp/containerd && \
+    mv /tmp/containerd/bin/ctr /usr/local/bin/ctr && \
+    chmod +x /usr/local/bin/ctr && \
+    rm -rf /tmp/containerd*
+
+# Default command
+ENTRYPOINT ["/bin/bash"]
