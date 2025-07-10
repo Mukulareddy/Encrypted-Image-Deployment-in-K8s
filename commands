@@ -1,17 +1,25 @@
 python3 -m http.server 8080
 
-kubectl delete pod secure-nginx
+# Running the docker resgistry
+docker run -d -p 5000:5000 --restart=always --name registry registry:2
+
+
 kubectl apply -f secure-nginx.yaml
 kubectl get pods
 kubectl describe pod secure-nginx
 kubectl logs secure-nginx -c decrypt-init
+kubectl delete pod secure-nginx
 
-sudo ctr -n k8s.io images list | grep nginx
-sudo ctr -n k8s.io images list | grep import
-sudo ctr -n k8s.io images remove localhost/nginx-decrypted:latest
+# List all the images in the k8s.io namespace
+sudo ctr --address /run/k3s/containerd/containerd.sock -n k8s.io images list | grep nginx-decrypted
+sudo ctr --address /run/k3s/containerd/containerd.sock -n k8s.io images list | grep import
 
+# Delete localhost tag
+sudo ctr --address /run/k3s/containerd/containerd.sock -n k8s.io images rm localhost/nginx-decrypted:latest
 
+# Delete docker.io tag
+sudo ctr --address /run/k3s/containerd/containerd.sock -n k8s.io images rm docker.io/library/nginx-decrypted:latest
 
-
-
+# Delete plain tag
+sudo ctr --address /run/k3s/containerd/containerd.sock -n k8s.io images rm nginx-decrypted:latest
 
