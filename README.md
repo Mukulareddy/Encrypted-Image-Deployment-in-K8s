@@ -1,11 +1,11 @@
 
-# 🔐 Encrypted Nginx Image Deployment on K3s using Init Container
+#  Encrypted Nginx Image Deployment on K3s using Init Container
 
 This guide explains how to securely deploy an encrypted Nginx image on a K3s cluster. The image is decrypted at runtime using an `initContainer`.
 
 ---
 
-## 📦 Steps
+##  Steps
 
 ### 1. Pull the Nginx Image
 
@@ -41,7 +41,7 @@ python3 -m http.server 8080
 
 ---
 
-## 🛠️ Init Container Setup
+##  Init Container Setup
 
 To run the `decrypt.sh` script, a custom image called `decrypt-init` is created using a `Dockerfile`. This image includes all required dependencies such as `curl`, `openssl`, and `ctr`.
 
@@ -66,7 +66,7 @@ curl http://localhost:5000/v2/_catalog
 
 ---
 
-## 🚀 Deploy to K3s
+##  Deploy to K3s
 
 ### 9. Apply the YAML File
 
@@ -76,7 +76,7 @@ kubectl apply -f secure-nginx.yaml
 
 ---
 
-## 🧪 Debug & Verification
+##  Debug & Verification
 
 ### Check Pod Status
 
@@ -110,7 +110,7 @@ sudo ctr --address /run/k3s/containerd/containerd.sock -n k8s.io images list | g
 
 ---
 
-## ✅ Output
+##  Output
 
 You will see the decrypted image (`nginx-decrypted:latest`) successfully imported into the K3s containerd and used by your running pod.
 
