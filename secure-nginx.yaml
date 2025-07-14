@@ -21,7 +21,7 @@ spec:
           mountPath: /run/k3s/containerd/containerd.sock
   containers:
     - name: nginx
-      image: docker.io/library/nginx-decrypted:latest                                                                                
+      image:  nginx-decrypted:latest 
       imagePullPolicy: Never
       ports:
         - containerPort: 80
