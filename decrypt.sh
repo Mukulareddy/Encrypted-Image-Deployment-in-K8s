@@ -37,27 +37,27 @@
 set -e
 
 # Use K3s's containerd socket
-CTR="ctr --address /run/k3s/containerd/containerd.sock"
+CTR="ctr --address /run/containerd/containerd.sock"
 NAMESPACE="-n k8s.io"
 
 echo "[*] Downloading encrypted image and key..."
-curl -fsSL -o /tmp/nginx.tar.enc  http://172.31.46.214:8080/nginx.tar.enc
-curl -fsSL -o /tmp/image.key      http://172.31.46.214:8080/image.key
+curl -fsSL -o /tmp/docker_open5gs.tar.enc  http://172.32.3.72:8080/docker_open5gs.tar.enc
+curl -fsSL -o /tmp/open5gs_image.key      http://172.32.3.72:8080/open5gs_image.key
 
 echo "[*] Decrypting..."
 openssl enc -d -aes-256-cbc \
-        -in  /tmp/nginx.tar.enc \
-        -out /tmp/nginx.tar      \
-        -pass file:/tmp/image.key
+        -in  /tmp/docker_open5gs.tar.enc \
+        -out /tmp/docker_open5gs.tar      \
+        -pass file:/tmp/open5gs_image.key
 
 echo "[*] Importing into K3s containerd with explicit name..."
 $CTR $NAMESPACE images import --digests \
-      --index-name docker.io/library/nginx-decrypted:latest \
-      /tmp/nginx.tar
+      --index-name docker.io/library/open5gs-decrypted:latest \
+      /tmp/docker_open5gs.tar
 
 
 # Mark image “managed” so K3s’s CRI plugin sees it
-$CTR $NAMESPACE image label docker.io/library/nginx-decrypted:latest \
+$CTR $NAMESPACE image label docker.io/library/open5gs-decrypted:latest \
       "io.cri-containerd.image=managed"
 
 echo "[*] Done."
